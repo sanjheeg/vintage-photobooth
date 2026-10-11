@@ -2,8 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>My Photobooth</title>
+        <title>photobooth</title>
         <link rel="stylesheet" href="styles.css">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
+        >
     </head>
     <body>
         <h1>photobooth</h1>
@@ -16,9 +20,16 @@
                 multiple
             />
         </div>
+        
+        <div class="crop-container">
+            <img id="crop-image" alt="Photo being edited">
+        </div>
 
-        <canvas id="photo-strip" width="192" height="576"></canvas>
+        <button id="apply-crop">Apply Crop</button>
 
+
+        <canvas id="photo-strip" width="600" height="1800"></canvas>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
         <script src="script.js"></script>
     </body>
 </html>

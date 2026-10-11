@@ -3,3 +3,18 @@ body {
   font-family: Georgia, serif;
   text-align: center;
 }
+
+#photo-strip {
+  width: 192px;
+  height: 576px;
+}
+
+.crop-container {
+    width: 400px;
+    max-width: 100%;
+}
+
+#crop-image {
+    display: block;
+    max-width: 100%;
+}
