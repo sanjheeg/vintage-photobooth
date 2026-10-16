@@ -7,6 +7,11 @@ const frame = new Image();
 cropImage = document.getElementById("crop-image");
 const applyCropButton = document.getElementById("apply-crop");
 
+let selectedFiles = [];
+let currentPhotoIndex = 0;
+const cropProgress = document.getElementById("crop-progress");
+let croppedPhotos = [null, null, null, null];
+
 /*
 imageUpload.addEventListener("change", function() {
     console.log("A photo was selected!");
@@ -48,12 +53,17 @@ imageUpload.addEventListener("change", function() {
 });
 */
 
-imageUpload.addEventListener("change", function() {
-    const file = imageUpload.files[0];
+imageUpload.addEventListener("change", function() {  
+    selectedFiles = Array.from(imageUpload.files);
+    croppedPhotos = [null, null, null, null];
 
-    if (!file) return;
+    if (selectedFiles.length !== 4) {
+        alert("Please select exactly 4 photos!");
+        return;
+    }
+    currentPhotoIndex = 0;
+    cropImage.src = URL.createObjectURL(selectedFiles[currentPhotoIndex]);
 
-    cropImage.src = URL.createObjectURL(file);
 });
 
 let cropper = null;
@@ -80,9 +90,45 @@ applyCropButton.addEventListener("click", function() {
         height: 390
     });
 
-    canvas.drawImage(cropImage, 30, 75, 540, 390);
+    croppedPhotos[currentPhotoIndex] = croppedCanvas;
+    drawPhotoStrip();
+    currentPhotoIndex++;
+
+    if (currentPhotoIndex < 4) {
+        cropImage.src = URL.createObjectURL(selectedFiles[currentPhotoIndex]);
+        cropProgress.textContent = `Photo ${currentPhotoIndex + 1} of 4`;        
+    } else {
+        frame.src = "frames/diwali.png";
+    }
+});
+
+frame.addEventListener("load", function() {
+    drawPhotoStrip();
 });
 
 
 
+function drawPhotoStrip() {
+    canvas.clearRect(0, 0, 600, 1800);
+    const imageHeight = 390;
+    const imageWidth = 540;
+    const x = 30;
+    const topMargin = 75; 
+    let imageCount = 0;
+
+    for (let i = 0; i < croppedPhotos.length; i++) {
+        if (croppedPhotos[i] === null) {
+            continue;
+        }
+        const y = topMargin + ((x + imageHeight) * imageCount);
+
+        canvas.drawImage(croppedPhotos[i], x, y, imageWidth, imageHeight);        
+        imageCount++;
+    
+    }
+
+    if (frame.complete && frame.naturalWidth > 0) {
+        canvas.drawImage(frame, 0, 0, 600, 1800);
+    }
+}
 
