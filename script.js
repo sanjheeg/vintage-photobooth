@@ -17,6 +17,8 @@ const cameraPreview = document.getElementById("camera-preview");
 const takePhotoButton = document.getElementById("take-photo");
 const snapshotPreview = document.getElementById("snapshot-preview");
 
+const countdown = document.getElementById("countdown");
+
 
 imageUpload.addEventListener("change", function() {  
     selectedFiles = Array.from(imageUpload.files);
@@ -81,15 +83,33 @@ startCameraButton.addEventListener("click", async function() {
 });
 
 takePhotoButton.addEventListener("click", async function() {
+    takePhotoButton.disabled = true;
     const snapshotCanvas = document.createElement("canvas");
     const snapshotContext = snapshotCanvas.getContext("2d");
     snapshotCanvas.width = cameraPreview.videoWidth;
     snapshotCanvas.height = cameraPreview.videoHeight;
 
-    snapshotContext.drawImage(cameraPreview, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-    const photoURL = snapshotCanvas.toDataURL("image/png");
+    let seconds = 3;
+    countdown.textContent = seconds;
 
-    snapshotPreview.src = photoURL;
+    const timer = setInterval(function() {
+        seconds--;
+
+        if (seconds > 0) {
+            countdown.textContent = seconds;
+        } else {
+            clearInterval(timer);
+            takePhotoButton.disabled = false;
+            countdown.textContent = "📸 Smile!";
+            snapshotContext.drawImage(cameraPreview, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+            const photoURL = snapshotCanvas.toDataURL("image/png");
+            snapshotPreview.src = photoURL;
+        }
+    }, 1000);
+
+
+
+    
 
 });
 
