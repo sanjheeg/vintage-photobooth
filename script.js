@@ -16,6 +16,7 @@ const startCameraButton = document.getElementById("start-camera");
 const cameraPreview = document.getElementById("camera-preview");
 const takePhotoButton = document.getElementById("take-photo");
 let cameraStream = null;
+let countdownTimer = null;
 const snapshotPreview = document.getElementById("snapshot-preview");
 
 const countdown = document.getElementById("countdown");
@@ -165,13 +166,14 @@ function takePhotoWithCountdown() {
     let seconds = 3;
     countdown.textContent = seconds;
 
-    const timer = setInterval(function() {
+    countdownTimer = setInterval(function() {
         seconds--;
 
         if (seconds > 0) {
             countdown.textContent = seconds;
         } else {
-            clearInterval(timer);
+            clearInterval(countdownTimer);
+            countdownTimer = null;
             countdown.textContent = "📸 Smile!";
 
             snapshotContext.drawImage(
@@ -211,7 +213,7 @@ uploadBackButton.addEventListener("click", showHome);
 
 
 function showHome() {
-    // stop the camera stream when going back 
+    // stop the camera stream if active  
     if (cameraStream) {
         cameraStream.getTracks().forEach(function(track) {
             track.stop();
@@ -220,6 +222,20 @@ function showHome() {
         cameraStream = null;
         cameraPreview.srcObject = null;
     }
+
+    // stop timer if active 
+    if (countdownTimer !== null) {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+        capturedPhotos = [];
+        countdown.textContent = "";
+        takePhotoButton.disabled = false;
+        snapshotPreview.removeAttribute("src");
+    }
+
+    // remove photostrip display
+    photoStrip.style.display = "none";
+    croppedPhotos = [null, null, null, null];
 
     welcomeScreen.style.display = "block";
     cameraSection.style.display = "none";
