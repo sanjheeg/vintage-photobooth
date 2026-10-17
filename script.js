@@ -65,13 +65,15 @@ applyCropButton.addEventListener("click", function() {
         cropImage.src = URL.createObjectURL(selectedFiles[currentPhotoIndex]);
         cropProgress.textContent = `Photo ${currentPhotoIndex + 1} of 4`;        
     } else {
-        frame.src = "frames/diwali.png";
+        
     }
 });
 
 frame.addEventListener("load", function() {
     drawPhotoStrip();
 });
+
+frame.src = "frames/diwali.png";
 
 
 startCameraButton.addEventListener("click", async function() {
@@ -84,6 +86,11 @@ startCameraButton.addEventListener("click", async function() {
 });
 
 takePhotoButton.addEventListener("click", async function() {
+    if (!cameraPreview.videoWidth || !cameraPreview.videoHeight) {
+        alert("Please start your camera first!");
+        return;
+    }
+
     takePhotoButton.disabled = true;
     capturedPhotos = [];
     takePhotoWithCountdown();
@@ -117,8 +124,29 @@ function drawPhotoStrip() {
 function takePhotoWithCountdown() {
     const snapshotCanvas = document.createElement("canvas");
     const snapshotContext = snapshotCanvas.getContext("2d");
-    snapshotCanvas.width = cameraPreview.videoWidth;
-    snapshotCanvas.height = cameraPreview.videoHeight;
+    snapshotCanvas.width = 540;
+    snapshotCanvas.height = 390;
+
+    const videoWidth = cameraPreview.videoWidth;
+    const videoHeight = cameraPreview.videoHeight;      
+    const targetRatio = 540 / 390;
+    const videoRatio = videoWidth / videoHeight;
+    
+
+    let cropWidth;
+    let cropHeight;
+    
+
+    if (videoRatio > targetRatio) {
+        cropHeight = videoHeight;
+        cropWidth = videoHeight * targetRatio;
+    } else {
+        cropWidth = videoWidth;
+        cropHeight = videoWidth / targetRatio;
+    }
+
+    const cropX = (videoWidth - cropWidth) / 2;
+    const cropY = (videoHeight - cropHeight) / 2;
 
     let seconds = 3;
     countdown.textContent = seconds;
@@ -131,16 +159,24 @@ function takePhotoWithCountdown() {
         } else {
             clearInterval(timer);
             countdown.textContent = "📸 Smile!";
-            snapshotContext.drawImage(cameraPreview, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-            const photoURL = snapshotCanvas.toDataURL("image/png"+capturedPhotos.length);
-            capturedPhotos.push(photoURL);
-            snapshotPreview.src = photoURL;
+
+            snapshotContext.drawImage(
+                cameraPreview,
+                cropX, cropY, cropWidth, cropHeight,
+                0, 0, 540, 390
+            );
+
+            const photoURL = snapshotCanvas.toDataURL("image/png");
+            capturedPhotos.push(snapshotCanvas);
+            //snapshotPreview.src = photoURL;
             
             if (capturedPhotos.length < 4) {
                 takePhotoWithCountdown();
             } else {
                 countdown.textContent = "All 4 photos captured!";
                 takePhotoButton.disabled = false;
+                croppedPhotos = [...capturedPhotos];
+                drawPhotoStrip();
             }
         }
     }, 1000);

@@ -18,3 +18,10 @@ body {
     display: block;
     max-width: 100%;
 }
+
+#camera-preview {
+    width: 540px;
+    aspect-ratio: 540 / 390;
+    object-fit: cover;
+    display: block;
+}
