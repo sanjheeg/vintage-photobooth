@@ -20,6 +20,13 @@ const snapshotPreview = document.getElementById("snapshot-preview");
 const countdown = document.getElementById("countdown");
 let capturedPhotos = [];
 
+const welcomeScreen = document.getElementById("welcome-screen");
+const cameraSection = document.getElementById("camera-section");
+const uploadSection = document.getElementById("upload-section");
+
+const chooseCameraButton = document.getElementById("choose-camera");
+const chooseUploadButton = document.getElementById("choose-upload");
+
 
 imageUpload.addEventListener("change", function() {  
     selectedFiles = Array.from(imageUpload.files);
@@ -119,6 +126,10 @@ function drawPhotoStrip() {
     if (frame.complete && frame.naturalWidth > 0) {
         canvas.drawImage(frame, 0, 0, 600, 1800);
     }
+
+    if (croppedPhotos.every(photo => photo !== null)) {
+        photoStrip.style.display = "block";
+    }
 }
 
 function takePhotoWithCountdown() {
@@ -131,7 +142,6 @@ function takePhotoWithCountdown() {
     const videoHeight = cameraPreview.videoHeight;      
     const targetRatio = 540 / 390;
     const videoRatio = videoWidth / videoHeight;
-    
 
     let cropWidth;
     let cropHeight;
@@ -168,7 +178,6 @@ function takePhotoWithCountdown() {
 
             const photoURL = snapshotCanvas.toDataURL("image/png");
             capturedPhotos.push(snapshotCanvas);
-            //snapshotPreview.src = photoURL;
             
             if (capturedPhotos.length < 4) {
                 takePhotoWithCountdown();
@@ -180,7 +189,15 @@ function takePhotoWithCountdown() {
             }
         }
     }, 1000);
-
-    
     
 }
+
+chooseCameraButton.addEventListener("click", function() {
+    welcomeScreen.style.display = "none";
+    cameraSection.style.display = "block";
+});
+
+chooseUploadButton.addEventListener("click", function() {
+    welcomeScreen.style.display = "none";
+    uploadSection.style.display = "block";
+});

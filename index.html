@@ -11,30 +11,44 @@
     </head>
     <body>
         <h1>photobooth</h1>
-    
-        <h2>Or take your photos!</h2>
-        <button id="start-camera">Start Camera</button>
-        <video id="camera-preview" autoplay playsinline></video>
-        <p id="countdown"></p>
-        <button id="take-photo">Take Photo 📸</button>
-        <img id="snapshot-preview" alt="Captured photo">
 
 
-        <p>turn your favorite memories into a cute photostrip</p>
-        <div>
+        <div id="welcome-screen">
+            <h2>How would you like to make your photostrip?</h2>
+            <button id="choose-camera">Take Photos</button>
+            <button id="choose-upload">Upload Photos</button>
+        </div>
+
+
+        <div id="camera-section">
+            <h2>Take your photos!</h2>
+            <button id="start-camera">Start Camera</button>
+            <video id="camera-preview" autoplay playsinline></video>
+            <p id="countdown"></p>
+            <button id="take-photo">Take Photo 📸</button>
+            <img id="snapshot-preview" alt="Captured photo">
+        </div>
+
+
+        <div id="upload-section">
+            <h2>Upload your photos!</h2>
+
             <input
                 type="file"
                 id="image-upload"
-                accept=".png, .jpeg, .jpg, .heic" 
+                accept=".png, .jpeg, .jpg, .heic"
                 multiple
-            />
-        </div>
-        <p id="crop-progress">Photo 1 of 4</p>
-        <div class="crop-container">
-            <img id="crop-image" alt="Photo being edited">
+            >
+
+            <p id="crop-progress">Photo 1 of 4</p>
+
+            <div class="crop-container">
+                <img id="crop-image" alt="Photo being edited">
+            </div>
+
+            <button id="apply-crop">Apply Crop</button>
         </div>
 
-        <button id="apply-crop">Apply Crop</button>
         <canvas id="photo-strip" width="600" height="1800"></canvas>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
         <script src="script.js"></script>

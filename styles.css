@@ -25,3 +25,12 @@ body {
     object-fit: cover;
     display: block;
 }
+
+#camera-section,
+#upload-section {
+    display: none;
+}
+
+#photo-strip {
+    display: none;
+}
