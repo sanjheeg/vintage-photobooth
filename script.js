@@ -15,6 +15,7 @@ let croppedPhotos = [null, null, null, null];
 const startCameraButton = document.getElementById("start-camera");
 const cameraPreview = document.getElementById("camera-preview");
 const takePhotoButton = document.getElementById("take-photo");
+let cameraStream = null;
 const snapshotPreview = document.getElementById("snapshot-preview");
 
 const countdown = document.getElementById("countdown");
@@ -26,6 +27,9 @@ const uploadSection = document.getElementById("upload-section");
 
 const chooseCameraButton = document.getElementById("choose-camera");
 const chooseUploadButton = document.getElementById("choose-upload");
+
+const cameraBackButton = document.getElementById("camera-back");
+const uploadBackButton = document.getElementById("upload-back");
 
 
 imageUpload.addEventListener("change", function() {  
@@ -84,12 +88,12 @@ frame.src = "frames/diwali.png";
 
 
 startCameraButton.addEventListener("click", async function() {
-    const stream = await navigator.mediaDevices.getUserMedia({
+    cameraStream  = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: false
     });
 
-    cameraPreview.srcObject = stream;
+    cameraPreview.srcObject = cameraStream;
 });
 
 takePhotoButton.addEventListener("click", async function() {
@@ -201,3 +205,23 @@ chooseUploadButton.addEventListener("click", function() {
     welcomeScreen.style.display = "none";
     uploadSection.style.display = "block";
 });
+
+cameraBackButton.addEventListener("click", showHome);
+uploadBackButton.addEventListener("click", showHome);
+
+
+function showHome() {
+    // stop the camera stream when going back 
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(function(track) {
+            track.stop();
+        });
+
+        cameraStream = null;
+        cameraPreview.srcObject = null;
+    }
+
+    welcomeScreen.style.display = "block";
+    cameraSection.style.display = "none";
+    uploadSection.style.display = "none";
+}

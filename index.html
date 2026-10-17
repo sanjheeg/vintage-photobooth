@@ -27,6 +27,7 @@
             <p id="countdown"></p>
             <button id="take-photo">Take Photo 📸</button>
             <img id="snapshot-preview" alt="Captured photo">
+            <button id="camera-back">← Back to Home</button>
         </div>
 
 
@@ -39,15 +40,14 @@
                 accept=".png, .jpeg, .jpg, .heic"
                 multiple
             >
-
             <p id="crop-progress">Photo 1 of 4</p>
-
             <div class="crop-container">
                 <img id="crop-image" alt="Photo being edited">
             </div>
-
             <button id="apply-crop">Apply Crop</button>
+            <button id="upload-back">← Back to Home</button>
         </div>
+
 
         <canvas id="photo-strip" width="600" height="1800"></canvas>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
