@@ -18,6 +18,7 @@ const takePhotoButton = document.getElementById("take-photo");
 const snapshotPreview = document.getElementById("snapshot-preview");
 
 const countdown = document.getElementById("countdown");
+let capturedPhotos = [];
 
 
 imageUpload.addEventListener("change", function() {  
@@ -84,36 +85,9 @@ startCameraButton.addEventListener("click", async function() {
 
 takePhotoButton.addEventListener("click", async function() {
     takePhotoButton.disabled = true;
-    const snapshotCanvas = document.createElement("canvas");
-    const snapshotContext = snapshotCanvas.getContext("2d");
-    snapshotCanvas.width = cameraPreview.videoWidth;
-    snapshotCanvas.height = cameraPreview.videoHeight;
-
-    let seconds = 3;
-    countdown.textContent = seconds;
-
-    const timer = setInterval(function() {
-        seconds--;
-
-        if (seconds > 0) {
-            countdown.textContent = seconds;
-        } else {
-            clearInterval(timer);
-            takePhotoButton.disabled = false;
-            countdown.textContent = "📸 Smile!";
-            snapshotContext.drawImage(cameraPreview, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
-            const photoURL = snapshotCanvas.toDataURL("image/png");
-            snapshotPreview.src = photoURL;
-        }
-    }, 1000);
-
-
-
-    
-
+    capturedPhotos = [];
+    takePhotoWithCountdown();
 });
-
-
 
 
 function drawPhotoStrip() {
@@ -140,3 +114,37 @@ function drawPhotoStrip() {
     }
 }
 
+function takePhotoWithCountdown() {
+    const snapshotCanvas = document.createElement("canvas");
+    const snapshotContext = snapshotCanvas.getContext("2d");
+    snapshotCanvas.width = cameraPreview.videoWidth;
+    snapshotCanvas.height = cameraPreview.videoHeight;
+
+    let seconds = 3;
+    countdown.textContent = seconds;
+
+    const timer = setInterval(function() {
+        seconds--;
+
+        if (seconds > 0) {
+            countdown.textContent = seconds;
+        } else {
+            clearInterval(timer);
+            countdown.textContent = "📸 Smile!";
+            snapshotContext.drawImage(cameraPreview, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+            const photoURL = snapshotCanvas.toDataURL("image/png"+capturedPhotos.length);
+            capturedPhotos.push(photoURL);
+            snapshotPreview.src = photoURL;
+            
+            if (capturedPhotos.length < 4) {
+                takePhotoWithCountdown();
+            } else {
+                countdown.textContent = "All 4 photos captured!";
+                takePhotoButton.disabled = false;
+            }
+        }
+    }, 1000);
+
+    
+    
+}
