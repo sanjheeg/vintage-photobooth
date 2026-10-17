@@ -12,46 +12,11 @@ let currentPhotoIndex = 0;
 const cropProgress = document.getElementById("crop-progress");
 let croppedPhotos = [null, null, null, null];
 
-/*
-imageUpload.addEventListener("change", function() {
-    console.log("A photo was selected!");
+const startCameraButton = document.getElementById("start-camera");
+const cameraPreview = document.getElementById("camera-preview");
+const takePhotoButton = document.getElementById("take-photo");
+const snapshotPreview = document.getElementById("snapshot-preview");
 
-    let imageCount = 0;
-    const imageHeight = 390;
-    const imageWidth = 540;
-    const x = 30;
-    const topMargin = 75; 
-    const loadedImages = [];
-    
-    for (const file of imageUpload.files) {
-        
-        console.log(`File Name: ${file.name}, Size: ${file.size} bytes`);
-        const image = new Image();
-        const y = topMargin + ((x + imageHeight) * imageCount);
-
-        image.addEventListener("load", function() {
-            //canvas.drawImage(image, x, y, imageWidth, imageHeight);
-            //loadedImages.push( {image, y});            
-
-            // only display the frame once all photos are done loading
-            console.log(loadedImages.length);
-            if (loadedImages.length == 4) {
-                frame.addEventListener("load", function() {
-                    console.log("Frame loaded successfully!");
-                    canvas.drawImage(frame, 0, 0, 600, 1800);
-                });
-
-                frame.src = "frames/diwali.png";
-            }
-        });
-
-        //image.src = URL.createObjectURL(file);
-        cropImage.src = URL.createObjectURL(file);
-
-        imageCount++;
-    }
-});
-*/
 
 imageUpload.addEventListener("change", function() {  
     selectedFiles = Array.from(imageUpload.files);
@@ -82,7 +47,6 @@ cropImage.addEventListener("load", function() {
 });
 
 applyCropButton.addEventListener("click", function() {
-    
     if (!cropper) return;
 
     const croppedCanvas = cropper.getCroppedCanvas({
@@ -105,6 +69,30 @@ applyCropButton.addEventListener("click", function() {
 frame.addEventListener("load", function() {
     drawPhotoStrip();
 });
+
+
+startCameraButton.addEventListener("click", async function() {
+    const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false
+    });
+
+    cameraPreview.srcObject = stream;
+});
+
+takePhotoButton.addEventListener("click", async function() {
+    const snapshotCanvas = document.createElement("canvas");
+    const snapshotContext = snapshotCanvas.getContext("2d");
+    snapshotCanvas.width = cameraPreview.videoWidth;
+    snapshotCanvas.height = cameraPreview.videoHeight;
+
+    snapshotContext.drawImage(cameraPreview, 0, 0, snapshotCanvas.width, snapshotCanvas.height);
+    const photoURL = snapshotCanvas.toDataURL("image/png");
+
+    snapshotPreview.src = photoURL;
+
+});
+
 
 
 
