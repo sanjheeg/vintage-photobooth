@@ -240,7 +240,7 @@ function showResults() {
         cameraStream = null;
         cameraPreview.srcObject = null;
     }
-    
+
     welcomeScreen.style.display = "none";
     cameraSection.style.display = "none";
     uploadSection.style.display = "none";
@@ -330,4 +330,13 @@ sharePhotoButton.addEventListener("click", function() {
             alert("Sharing isn't supported on this browser. Please download your photostrip instead!");
         }
     }, "image/png");
+});
+
+downloadPhotoButton.addEventListener("click", function() {
+    const link = document.createElement("a");
+
+    link.href = photoStrip.toDataURL("image/png");
+    link.download = "my-photostrip.png";
+
+    link.click();
 });
