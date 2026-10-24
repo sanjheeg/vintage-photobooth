@@ -233,6 +233,14 @@ uploadBackButton.addEventListener("click", showHome);
 
 
 function showResults() {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(function(track) {
+            track.stop();
+        });
+        cameraStream = null;
+        cameraPreview.srcObject = null;
+    }
+    
     welcomeScreen.style.display = "none";
     cameraSection.style.display = "none";
     uploadSection.style.display = "none";
