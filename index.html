@@ -20,11 +20,15 @@
         </div>
 
 
+
         <div id="camera-section">
             <h2>Take your photos!</h2>
             <button id="start-camera">Start Camera</button>
             <button id="camera-back">← Back to Home</button>
-            <video id="camera-preview" autoplay playsinline></video>
+            <div class="camera-container">
+                <video id="camera-preview" autoplay playsinline></video>
+                <div id="camera-flash"></div>
+            </div>
             <p id="countdown"></p>
             <button id="take-photo">Take Photo 📸</button>
             <img id="snapshot-preview" alt="Captured photo">

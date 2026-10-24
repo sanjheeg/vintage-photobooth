@@ -32,6 +32,8 @@ const chooseUploadButton = document.getElementById("choose-upload");
 const cameraBackButton = document.getElementById("camera-back");
 const uploadBackButton = document.getElementById("upload-back");
 
+const cameraFlash = document.getElementById("camera-flash");
+
 
 imageUpload.addEventListener("change", function() {  
     selectedFiles = Array.from(imageUpload.files);
@@ -181,6 +183,7 @@ function takePhotoWithCountdown() {
                 cropX, cropY, cropWidth, cropHeight,
                 0, 0, 540, 390
             );
+            flashCamera();
 
             const photoURL = snapshotCanvas.toDataURL("image/png");
             capturedPhotos.push(snapshotCanvas);
@@ -240,4 +243,12 @@ function showHome() {
     welcomeScreen.style.display = "block";
     cameraSection.style.display = "none";
     uploadSection.style.display = "none";
+}
+
+function flashCamera() {
+    cameraFlash.classList.remove("flash");
+
+    void cameraFlash.offsetWidth;
+
+    cameraFlash.classList.add("flash");
 }
