@@ -27,11 +27,8 @@ body {
 }
 
 #camera-section,
-#upload-section {
-    display: none;
-}
-
-#photo-strip {
+#upload-section,
+#results-section {
     display: none;
 }
 

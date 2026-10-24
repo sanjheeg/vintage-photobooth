@@ -41,6 +41,10 @@ let currentFilter = "color";
 
 const sharePhotoButton = document.getElementById("share-photo");
 
+const resultsSection = document.getElementById("results-section");
+const downloadPhotoButton = document.getElementById("download-photo");
+const retakePhotoButton = document.getElementById("retake-photo");
+
 
 imageUpload.addEventListener("change", function() {  
     selectedFiles = Array.from(imageUpload.files);
@@ -144,8 +148,7 @@ function drawPhotoStrip() {
     }
 
     if (croppedPhotos.every(photo => photo !== null)) {
-        photoStrip.style.display = "block";
-        sharePhotoButton.style.display = "block";
+        showResults();
     }
 }
 
@@ -229,6 +232,13 @@ cameraBackButton.addEventListener("click", showHome);
 uploadBackButton.addEventListener("click", showHome);
 
 
+function showResults() {
+    welcomeScreen.style.display = "none";
+    cameraSection.style.display = "none";
+    uploadSection.style.display = "none";
+    resultsSection.style.display = "block";
+}
+
 function showHome() {
     // stop the camera stream if active  
     if (cameraStream) {
@@ -260,7 +270,7 @@ function showHome() {
 
     colorFilterButton.disabled = false;
     bwFilterButton.disabled = false;
-    sharePhotoButton.style.display = "none";
+    resultsSection.style.display = "none";
 }
 
 function flashCamera() {
