@@ -39,6 +39,8 @@ const bwFilterButton = document.getElementById("bw-filter");
 
 let currentFilter = "color";
 
+const sharePhotoButton = document.getElementById("share-photo");
+
 
 imageUpload.addEventListener("change", function() {  
     selectedFiles = Array.from(imageUpload.files);
@@ -143,6 +145,7 @@ function drawPhotoStrip() {
 
     if (croppedPhotos.every(photo => photo !== null)) {
         photoStrip.style.display = "block";
+        sharePhotoButton.style.display = "block";
     }
 }
 
@@ -257,6 +260,7 @@ function showHome() {
 
     colorFilterButton.disabled = false;
     bwFilterButton.disabled = false;
+    sharePhotoButton.style.display = "none";
 }
 
 function flashCamera() {
@@ -281,4 +285,31 @@ bwFilterButton.addEventListener("click", function() {
 
     bwFilterButton.classList.add("active");
     colorFilterButton.classList.remove("active");
+});
+
+
+sharePhotoButton.addEventListener("click", function() {
+    photoStrip.toBlob(async function(blob) {
+        if (!blob) {
+            alert("Could not create the photostrip image.");
+            return;
+        }
+
+        const photoFile = new File([blob], "my-photostrip.png", {
+            type: "image/png"
+        });
+
+        if (navigator.canShare && navigator.canShare({ files: [photoFile] })) {
+            try {
+                await navigator.share({
+                    files: [photoFile],
+                    title: "My Photostrip"
+                });
+            } catch (error) {
+                console.log("Sharing cancelled or failed:", error);
+            }
+        } else {
+            alert("Sharing isn't supported on this browser. Please download your photostrip instead!");
+        }
+    }, "image/png");
 });
