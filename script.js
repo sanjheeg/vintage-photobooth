@@ -34,6 +34,11 @@ const uploadBackButton = document.getElementById("upload-back");
 
 const cameraFlash = document.getElementById("camera-flash");
 
+const colorFilterButton = document.getElementById("color-filter");
+const bwFilterButton = document.getElementById("bw-filter");
+
+let currentFilter = "color";
+
 
 imageUpload.addEventListener("change", function() {  
     selectedFiles = Array.from(imageUpload.files);
@@ -106,6 +111,8 @@ takePhotoButton.addEventListener("click", async function() {
     }
 
     takePhotoButton.disabled = true;
+    colorFilterButton.disabled = true;
+    bwFilterButton.disabled = true;
     capturedPhotos = [];
     takePhotoWithCountdown();
 });
@@ -178,6 +185,8 @@ function takePhotoWithCountdown() {
             countdownTimer = null;
             countdown.textContent = "";
 
+            snapshotContext.filter = currentFilter === "bw" ? "grayscale(100%)" : "none";
+
             snapshotContext.drawImage(
                 cameraPreview,
                 cropX, cropY, cropWidth, cropHeight,
@@ -195,6 +204,8 @@ function takePhotoWithCountdown() {
                 takePhotoButton.disabled = false;
                 croppedPhotos = [...capturedPhotos];
                 drawPhotoStrip();
+                colorFilterButton.disabled = false;
+                bwFilterButton.disabled = false;
             }
         }
     }, 1000);
@@ -243,6 +254,9 @@ function showHome() {
     welcomeScreen.style.display = "block";
     cameraSection.style.display = "none";
     uploadSection.style.display = "none";
+
+    colorFilterButton.disabled = false;
+    bwFilterButton.disabled = false;
 }
 
 function flashCamera() {
@@ -252,3 +266,19 @@ function flashCamera() {
 
     cameraFlash.classList.add("flash");
 }
+
+colorFilterButton.addEventListener("click", function() {
+    currentFilter = "color";
+    cameraPreview.classList.remove("black-and-white");
+
+    colorFilterButton.classList.add("active");
+    bwFilterButton.classList.remove("active");
+});
+
+bwFilterButton.addEventListener("click", function() {
+    currentFilter = "bw";
+    cameraPreview.classList.add("black-and-white");
+
+    bwFilterButton.classList.add("active");
+    colorFilterButton.classList.remove("active");
+});

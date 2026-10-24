@@ -63,6 +63,15 @@ body {
     animation: cameraFlash 0.35s ease-out;
 }
 
+#camera-preview.black-and-white {
+    filter: grayscale(100%);
+}
+
+.filter-options button.active {
+    background-color: #333;
+    color: white;
+}
+
 @keyframes cameraFlash {
     0% { opacity: 0; }
     15% { opacity: 1; }
@@ -82,4 +91,9 @@ body {
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
     z-index: 2;
     pointer-events: none;
+}
+
+.filter-options button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
