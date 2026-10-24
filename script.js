@@ -176,7 +176,7 @@ function takePhotoWithCountdown() {
         } else {
             clearInterval(countdownTimer);
             countdownTimer = null;
-            countdown.textContent = "📸 Smile!";
+            countdown.textContent = "";
 
             snapshotContext.drawImage(
                 cameraPreview,
@@ -191,7 +191,7 @@ function takePhotoWithCountdown() {
             if (capturedPhotos.length < 4) {
                 takePhotoWithCountdown();
             } else {
-                countdown.textContent = "All 4 photos captured!";
+                countdown.textContent = "";
                 takePhotoButton.disabled = false;
                 croppedPhotos = [...capturedPhotos];
                 drawPhotoStrip();
