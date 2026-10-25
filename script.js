@@ -48,7 +48,7 @@ const retakePhotoButton = document.getElementById("retake-photo");
 let currentMode = null;
 
 
-imageUpload.addEventListener("change", function() {  
+imageUpload.addEventListener("change", async function() {
     selectedFiles = Array.from(imageUpload.files);
     croppedPhotos = [null, null, null, null];
 
@@ -57,7 +57,12 @@ imageUpload.addEventListener("change", function() {
         return;
     }
     currentPhotoIndex = 0;
-    cropImage.src = URL.createObjectURL(selectedFiles[currentPhotoIndex]);
+    try {
+        cropImage.src = await prepareImage(selectedFiles[currentPhotoIndex]);
+    } catch (error) {
+        console.error("Image conversion failed:", error);
+        alert("Couldn't open this image. Please try a JPG or PNG instead.");
+    }
 
 });
 
@@ -69,6 +74,9 @@ cropImage.addEventListener("load", function() {
         cropper = null;
     }   
 
+    console.log("Image loaded! Starting Cropper...");
+    console.log("Selected files:", selectedFiles);
+
     cropper = new Cropper(cropImage, {
         aspectRatio: 540 / 390,
         viewMode: 1,
@@ -76,7 +84,7 @@ cropImage.addEventListener("load", function() {
     });
 });
 
-applyCropButton.addEventListener("click", function() {
+applyCropButton.addEventListener("click", async function() {
     if (!cropper) return;
 
     const croppedCanvas = cropper.getCroppedCanvas({
@@ -89,7 +97,12 @@ applyCropButton.addEventListener("click", function() {
     currentPhotoIndex++;
 
     if (currentPhotoIndex < 4) {
-        cropImage.src = URL.createObjectURL(selectedFiles[currentPhotoIndex]);
+        try {
+            cropImage.src = await prepareImage(selectedFiles[currentPhotoIndex]);
+        } catch (error) {
+            console.error("Image conversion failed:", error);
+            alert("Couldn't open this image. Please try a JPG or PNG instead.");
+        }
         cropProgress.textContent = `Photo ${currentPhotoIndex + 1} of 4`;        
     } else {
         
@@ -367,3 +380,21 @@ retakePhotoButton.addEventListener("click", function() {
         uploadSection.style.display = "block";
     }
 });
+
+async function prepareImage(file) {
+    const isHEIC = file.type === "image/heic" ||
+                   file.type === "image/heif" ||
+                   /\.hei[cf]$/i.test(file.name);
+
+    if (isHEIC) {
+        const convertedBlob = await heic2any({
+            blob: file,
+            toType: "image/jpeg",
+            quality: 0.9
+        });
+
+        return URL.createObjectURL(convertedBlob);
+    }
+
+    return URL.createObjectURL(file);
+}
