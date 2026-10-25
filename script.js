@@ -45,6 +45,8 @@ const resultsSection = document.getElementById("results-section");
 const downloadPhotoButton = document.getElementById("download-photo");
 const retakePhotoButton = document.getElementById("retake-photo");
 
+let currentMode = null;
+
 
 imageUpload.addEventListener("change", function() {  
     selectedFiles = Array.from(imageUpload.files);
@@ -221,11 +223,13 @@ function takePhotoWithCountdown() {
 chooseCameraButton.addEventListener("click", function() {
     welcomeScreen.style.display = "none";
     cameraSection.style.display = "block";
+    currentMode = "camera";
 });
 
 chooseUploadButton.addEventListener("click", function() {
     welcomeScreen.style.display = "none";
     uploadSection.style.display = "block";
+    currentMode = "upload";
 });
 
 cameraBackButton.addEventListener("click", showHome);
@@ -339,4 +343,27 @@ downloadPhotoButton.addEventListener("click", function() {
     link.download = "my-photostrip.png";
 
     link.click();
+});
+
+retakePhotoButton.addEventListener("click", function() {
+    croppedPhotos = [null, null, null, null];
+    capturedPhotos = [];
+
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+
+    cropImage.removeAttribute("src");
+
+    resultsSection.style.display = "none";
+    currentPhotoIndex = 0;
+    cropProgress.textContent = "Photo 1 of 4";
+    imageUpload.value = "";
+
+    if (currentMode === "camera") {
+        cameraSection.style.display = "block";
+    } else {
+        uploadSection.style.display = "block";
+    }
 });
