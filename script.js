@@ -262,6 +262,7 @@ function showResults() {
     cameraSection.style.display = "none";
     uploadSection.style.display = "none";
     resultsSection.style.display = "block";
+    photoStrip.style.display = "block";
 }
 
 function showHome() {
